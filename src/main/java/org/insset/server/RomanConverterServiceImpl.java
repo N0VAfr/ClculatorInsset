@@ -7,6 +7,8 @@ package org.insset.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import org.insset.client.service.RomanConverterService;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -24,8 +26,33 @@ public class RomanConverterServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public Integer convertRomanToArabe(String nbr) throws IllegalArgumentException {
+        Map<Character, Integer> romanToDecimalMap = new HashMap<>();
+        romanToDecimalMap.put('I', 1);
+        romanToDecimalMap.put('V', 5);
+        romanToDecimalMap.put('X', 10);
+        romanToDecimalMap.put('L', 50);
+        romanToDecimalMap.put('C', 100);
+        romanToDecimalMap.put('D', 500);
+        romanToDecimalMap.put('M', 1000);
+        
+        int total = 0; // To store the final result
+        int prevValue = 0;
+        
+        for (int i = nbr.length() - 1; i >= 0; i--) {
+            char currentChar = nbr.charAt(i);
+            int currentValue = romanToDecimalMap.get(currentChar);
+            
+            if (currentValue < prevValue) {
+                total -= currentValue;
+            } else {
+                total += currentValue;
+            }
+            
+            prevValue = currentValue;
+        }
+        
         //Implement your code
-        return 3;
+        return total;
     }
 
     @Override
